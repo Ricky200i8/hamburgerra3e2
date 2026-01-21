@@ -47,14 +47,11 @@ export default function Index() {
           backgroundColor="#fef3c7"
         >
           <BurgerModel
-            animated={true}
-            autoRotate={isAutoRotating}
-            scale={1}
+            isAssembled={assemblyProgress > 0.5}
+            isAutoRotating={isAutoRotating}
           />
+          <CameraControls />
         </Canvas3D>
-
-        {/* Controles de cámara */}
-        <CameraControls />
       </View>
 
       {/* Panel de controles */}

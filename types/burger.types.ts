@@ -31,13 +31,16 @@ export interface PartRotation {
 /**
  * Configuración completa de una parte de la hamburguesa
  */
+/**
+ * Configuración completa de una parte de la hamburguesa
+ */
 export interface BurgerPartConfig {
     name: BurgerPartName;
-    modelPath: string;
+    modelPath: any; // Allow require() return type
     position: PartPosition;
-    rotation?: PartRotation;
-    scale?: number;
-    order: number; // Orden de apilamiento (0 = abajo, mayor = arriba)
+    rotation: PartRotation; // Made mandatory
+    scale: number; // Made mandatory
+    order: number;
 }
 
 /**
@@ -45,18 +48,16 @@ export interface BurgerPartConfig {
  */
 export interface BurgerPartProps {
     config: BurgerPartConfig;
-    animated?: boolean;
-    animationDelay?: number;
-    visible?: boolean;
+    index: number;
+    isAssembled: boolean;
 }
 
 /**
  * Props para el componente BurgerModel
  */
 export interface BurgerModelProps {
-    animated?: boolean;
-    autoRotate?: boolean;
-    scale?: number;
+    isAssembled: boolean;
+    isAutoRotating: boolean;
 }
 
 /**
@@ -72,7 +73,10 @@ export interface LoadingState {
  * Props para Canvas3D
  */
 export interface Canvas3DProps {
-    children: React.ReactNode;
+    children?: React.ReactNode;
     cameraPosition?: [number, number, number];
     backgroundColor?: string;
+    isAssembled?: boolean;
+    isAutoRotating?: boolean;
+    style?: any;
 }

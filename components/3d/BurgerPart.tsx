@@ -1,68 +1,48 @@
-import React, { useEffect, useRef } from 'react';
-import { Text, View } from 'react-native';
-import { useGLTFLoader } from '../../hooks/useGLTFLoader';
+import { useGLTF } from '@react-three/drei/native';
+import { useFrame } from '@react-three/fiber/native';
+import React, { useRef } from 'react';
+import { Group } from 'three';
 import { BurgerPartProps } from '../../types/burger.types';
 
-/**
- * Componente BurgerPart
- * Representa una parte individual de la hamburguesa
- */
-export default function BurgerPart({
-    config,
-    animated = false,
-    animationDelay = 0,
-    visible = true,
-}: BurgerPartProps) {
-    const { model, loadingState } = useGLTFLoader(config.modelPath);
-    const meshRef = useRef<any>(null);
+const BurgerPart: React.FC<BurgerPartProps> = ({ config, index, isAssembled }) => {
+    // Cargar el modelo GLTF
+    const { scene } = useGLTF(config.modelPath) as any;
+    const meshRef = useRef<Group>(null);
 
-    useEffect(() => {
-        if (!meshRef.current || !animated) return;
+    // Posición inicial (ensamblada)
+    const targetY = config.position.y;
 
-        // Aquí iría la lógica de animación con Three.js
-        // Por ejemplo, usando react-spring o animaciones de Three.js
-    }, [animated, animationDelay]);
+    // Altura de "explosión" para la vista desensamblada
+    // Calculamos una separación basada en el índice para que se expandan verticalmente
+    const explodedY = targetY + (index - 3) * 0.5; // Ajustar factor de separación según necesites
 
-    if (!visible) return null;
+    useFrame((state, delta) => {
+        if (meshRef.current) {
+            // Animación simple de interpolación hacia la posición objetivo
+            const targetPositionY = isAssembled ? targetY : explodedY;
 
-    if (loadingState.isLoading) {
-        return (
-            <View className="items-center justify-center p-2">
-                <Text className="text-xs text-gray-500">
-                    Cargando {config.name}...
-                </Text>
-            </View>
-        );
-    }
+            // Interpolación lineal simple (lerp) para suavidad
+            meshRef.current.position.y += (targetPositionY - meshRef.current.position.y) * 5 * delta;
 
-    if (loadingState.error) {
-        return (
-            <View className="items-center justify-center p-2">
-                <Text className="text-xs text-red-500">
-                    Error: {config.name}
-                </Text>
-            </View>
-        );
-    }
+            // Rotación suave si no está ensamblada (opcional visual effect)
+            if (!isAssembled) {
+                // meshRef.current.rotation.y += delta * 0.2;
+            } else {
+                // Reset rotación al ensamblar si es necesario
+                // meshRef.current.rotation.y += (0 - meshRef.current.rotation.y) * 5 * delta;
+            }
+        }
+    });
 
-    // En una implementación real con Three.js, aquí renderizarías el modelo 3D
-    // usando <primitive object={model.scene} /> o similar
     return (
-        <View
-            className="absolute items-center justify-center"
-            style={{
-                transform: [
-                    { translateX: config.position.x * 50 },
-                    { translateY: config.position.y * 50 },
-                ],
-            }}
-        >
-            {/* Placeholder visual para la parte */}
-            <View className="bg-orange-400 rounded-full w-16 h-16 items-center justify-center shadow-lg border-2 border-orange-600">
-                <Text className="text-white font-bold text-xs text-center">
-                    {config.name}
-                </Text>
-            </View>
-        </View>
+        <primitive
+            ref={meshRef}
+            object={scene}
+            position={[config.position.x, targetY, config.position.z]}
+            scale={[config.scale, config.scale, config.scale]}
+            rotation={[config.rotation.x, config.rotation.y, config.rotation.z]}
+        />
     );
-}
+};
+
+export default BurgerPart;

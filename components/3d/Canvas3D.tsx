@@ -1,57 +1,53 @@
+import { Canvas } from '@react-three/fiber/native';
 import React, { Suspense } from 'react';
-import { Text, View } from 'react-native';
+import { View } from 'react-native';
+import { CAMERA_CONFIG, LIGHTS_CONFIG } from '../../constants/burgerParts';
 import { Canvas3DProps } from '../../types/burger.types';
 
-/**
- * Componente Canvas3D
- * Wrapper para el canvas de Three.js
- * 
- * NOTA: Este es un componente placeholder.
- * Para React Native, necesitarás usar expo-gl y expo-three
- * o react-three-fiber con react-native-webview para renderizar 3D
- */
-export default function Canvas3D({
+const Canvas3D: React.FC<Canvas3DProps> = ({
     children,
-    cameraPosition = [3, 2, 3],
-    backgroundColor = '#f0f0f0',
-}: Canvas3DProps) {
+    cameraPosition = CAMERA_CONFIG.position,
+    backgroundColor,
+    style
+}) => {
     return (
-        <View
-            className="flex-1 w-full h-full"
-            style={{ backgroundColor }}
-        >
-            {/* 
-        IMPORTANTE: React Three Fiber no funciona directamente en React Native
-        Necesitas usar una de estas opciones:
-        
-        1. expo-gl + expo-three (recomendado para Expo)
-        2. react-three-fiber con WebView
-        3. Usar una vista web embebida
-        
-        Por ahora, este es un placeholder que muestra el concepto
-      */}
-            <View className="flex-1 items-center justify-center bg-gradient-to-br from-sky-100 to-blue-200">
-                <View className="bg-white/90 backdrop-blur-lg rounded-3xl p-8 shadow-2xl">
-                    <Text className="text-2xl font-bold text-gray-800 text-center mb-4">
-                        🍔 Vista 3D
-                    </Text>
-                    <Text className="text-gray-600 text-center mb-2">
-                        Canvas de Three.js
-                    </Text>
-                    <Text className="text-sm text-gray-500 text-center">
-                        Posición cámara: [{cameraPosition.join(', ')}]
-                    </Text>
-                </View>
+        <View className="flex-1 w-full" style={[{ backgroundColor: backgroundColor || '#f5f5f7' }, style]}>
+            <Canvas
+                camera={{
+                    position: cameraPosition,
+                    fov: CAMERA_CONFIG.fov,
+                }}
+                onCreated={(state) => {
+                    // Ajustes iniciales de renderizado si son necesarios
+                    const _gl = state.gl.getContext();
+                    const pixelStorei = _gl.pixelStorei.bind(_gl);
+                    _gl.pixelStorei = function (...args) {
+                        const [parameter] = args;
+                        switch (parameter) {
+                            case _gl.UNPACK_FLIP_Y_WEBGL:
+                                return pixelStorei(...args);
+                        }
+                    };
+                }}
+            >
+                {/* Iluminación */}
+                <ambientLight intensity={LIGHTS_CONFIG.ambient.intensity} />
+                <directionalLight
+                    position={LIGHTS_CONFIG.directional.position}
+                    intensity={LIGHTS_CONFIG.directional.intensity}
+                />
+                <pointLight
+                    position={LIGHTS_CONFIG.point.position}
+                    intensity={LIGHTS_CONFIG.point.intensity}
+                />
 
-                {/* Aquí se renderizarían los children (modelos 3D) */}
-                <Suspense fallback={
-                    <View className="absolute inset-0 items-center justify-center">
-                        <Text className="text-white text-lg">Cargando modelos 3D...</Text>
-                    </View>
-                }>
+                {/* Contenido (Modelo + Controles) */}
+                <Suspense fallback={null}>
                     {children}
                 </Suspense>
-            </View>
+            </Canvas>
         </View>
     );
-}
+};
+
+export default Canvas3D;
