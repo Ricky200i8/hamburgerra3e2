@@ -1,3 +1,4 @@
+import "@/global.css";
 import React from 'react';
 import { StatusBar, Text, View } from 'react-native';
 import BurgerModel from '../components/3d/BurgerModel';

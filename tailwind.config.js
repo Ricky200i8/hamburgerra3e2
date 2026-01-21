@@ -7,4 +7,8 @@ module.exports = {
     extend: {},
   },
   plugins: [],
+  // Deshabilitar animaciones CSS que requieren Reanimated
+  corePlugins: {
+    // Mantener todas las utilidades excepto las que causan problemas
+  },
 }

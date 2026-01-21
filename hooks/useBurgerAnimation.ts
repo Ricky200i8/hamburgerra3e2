@@ -10,7 +10,7 @@ export function useBurgerAnimation() {
     const [animationState, setAnimationState] = useState<AnimationState>('idle');
     const [isAutoRotating, setIsAutoRotating] = useState(true);
     const [assemblyProgress, setAssemblyProgress] = useState(1); // 0 = desarmado, 1 = armado
-    const animationFrameRef = useRef<number>();
+    const animationFrameRef = useRef<number | undefined>(undefined);
 
     /**
      * Animar el ensamblaje de la hamburguesa

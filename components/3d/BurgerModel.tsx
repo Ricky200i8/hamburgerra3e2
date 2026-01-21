@@ -1,6 +1,6 @@
 import "@/global.css";
 import React, { useEffect, useRef } from 'react';
-import { View } from 'react-native';
+import { Text, View } from 'react-native';
 import { BURGER_PARTS } from '../../constants/burgerParts';
 import { BurgerModelProps } from '../../types/burger.types';
 import BurgerPart from './BurgerPart';
@@ -62,9 +62,9 @@ export default function BurgerModel({
 
             {/* Indicador visual del modelo completo */}
             <View className="absolute bottom-4 bg-white/80 backdrop-blur-sm rounded-full px-4 py-2 shadow-lg">
-                <View className="text-sm text-gray-700 font-medium">
+                <Text className="text-sm text-gray-700 font-medium">
                     🍔 Modelo 3D ({BURGER_PARTS.length} partes)
-                </View>
+                </Text>
             </View>
         </View>
     );
