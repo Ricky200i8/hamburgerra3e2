@@ -1,53 +1,49 @@
-> Edited for use in IDX on 07/09/12
+🍔 HAMBURGERRA3E2 - 3D Render
+Este es un proyecto de visualización 3D desarrollado por Ricardo Arias (Curso: 3E1). La aplicación utiliza un entorno móvil moderno para renderizar piezas de una hamburguesa de forma dinámica a partir de modelos tridimensionales.
 
-# Welcome to your Expo app 👋
+👤 Información del Proyecto
+Autor: Ricardo Arias
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+Curso: 3E1
 
-## Get started
+Tecnologías: React Native + Expo + Three.js (Fiber)
 
-#### Android
+Estilos: Tailwind CSS (NativeWind)
 
-Android previews are defined as a `workspace.onStart` hook and started as a vscode task when the workspace is opened/started.
+🛠️ Estructura Técnica (Análisis de Carpetas)
+Basado en la arquitectura del sistema, el proyecto se organiza de la siguiente manera:
 
-Note, if you can't find the task, either:
-- Rebuild the environment (using command palette: `IDX: Rebuild Environment`), or
-- Run `npm run android -- --tunnel` command manually run android and see the output in your terminal. The device should pick up this new command and switch to start displaying the output from it.
+app/: Utiliza Expo Router. El archivo index.tsx actúa como la vista principal única donde se integra el canvas 3D y la interfaz.
 
-In the output of this command/task, you'll find options to open the app in a
+components/3d/: El núcleo del renderizado.
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+Canvas3D.tsx: Configura el escenario, luces y entorno de Three.js.
 
-You'll also find options to open the app's developer menu, reload the app, and more.
+BurgerModel.tsx: Componente maestro que orquesta el modelo.
 
-#### Web
+BurgerPart.tsx: Lógica individual para cada pieza de la hamburguesa (pan, carne, etc.).
 
-Web previews will be started and managred automatically. Use the toolbar to manually refresh.
+CameraControls.tsx: Gestión de la perspectiva y movimiento del usuario.
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+components/ui/:
 
-## Get a fresh project
+ControlPanel.tsx: Interfaz de usuario para interactuar con el modelo.
 
-When you're ready, run:
+LoadingScreen.tsx: Pantalla de carga para los activos pesados (.glb).
 
-```bash
-npm run reset-project
-```
+hooks/:
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+useGLTFLoader.ts: Hook personalizado para la carga eficiente de los modelos.
 
-## Learn more
+useBurgerAnimation.ts: Control de las transiciones y movimientos de las piezas.
 
-To learn more about developing your project with Expo, look at the following resources:
+constants/ & types/: Definiciones estrictas de TypeScript para asegurar que cada parte de la hamburguesa esté correctamente mapeada.
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+🚀 Características Principales
+Carga Dinámica: Uso de archivos .glb almacenados en los assets del proyecto.
 
-## Join the community
+Modularidad: Cada parte de la hamburguesa es un componente independiente, lo que permite manipularlas por separado.
 
-Join our community of developers creating universal apps.
+Performance: Implementación de hooks personalizados para optimizar la carga de geometría 3D en dispositivos móviles.
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+Diseño Moderno: Interfaz estilizada íntegramente con Tailwind CSS.
